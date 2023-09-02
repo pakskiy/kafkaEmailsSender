@@ -1,0 +1,29 @@
+server:
+  port: 8088
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  kafka:
+    bootstrap-servers: 127.0.0.1:9094
+    consumer:
+      topic:
+        name: registration-topic
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        debug: false
+        transport:
+          protocol: smtp
+        smtp:
+          from: ${EMAIL_FROM}
+          auth: true
+          starttls:
+            enable: true
+            port: 465
+        welcome-text: Hello! You just registered
+    protocol: smtp
