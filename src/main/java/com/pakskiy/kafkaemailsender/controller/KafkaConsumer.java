@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
@@ -25,12 +26,13 @@ public class KafkaConsumer {
     public void listenEmails(List<String> emails) {
         emails.forEach(e -> {
             log.info("consume message {}", e);
-            try {
-                emailService.send(objectMapper.readValue(e, EmailDto.class));
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
-            }
-
+            CompletableFuture.runAsync(() -> {
+                try {
+                    emailService.send(objectMapper.readValue(e, EmailDto.class));
+                } catch (JsonProcessingException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         });
     }
 }
